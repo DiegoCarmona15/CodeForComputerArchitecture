@@ -1,0 +1,84 @@
+char  data[26];
+int   number_of_bytes_received;
+const int A = 2;
+const int B = 3;
+
+void setup() {
+              Serial.begin  (9600);
+              Serial.println ("Esperando instrucciones...");
+              pinMode(A, INPUT);
+              pinMode(B, INPUT);
+             }
+
+void loop() {
+
+  bool a = digitalRead(A);
+  bool b = digitalRead(B);
+  while(Serial.available())
+  {
+    number_of_bytes_received = Serial.readBytesUntil   (13, data, 25);     
+    data[number_of_bytes_received]  = 0;    
+    bool result0 = strcmp  (data, "ADD");    
+      if (!result0) {Serial.println("Operación suma");
+        if(a^b) {
+                Serial.println("Suma");
+                }
+        if(a&&b){
+                Serial.println("Acarreo");
+                }
+        }
+    bool result1 = strcmp  (data, "MUL");    
+      if (!result1)   {Serial.println("Operación multiplicación");
+        if(a&&b){
+          Serial.println("Multiplicacion");
+        }
+        }
+    bool result2 = strcmp  (data, "RES");    
+      if (!result2)   {Serial.println("Operación resta");
+        if(a^b){
+          Serial.println("Resta");
+        }
+        if(b){
+          Serial.println("Acarreo");
+        }
+        }
+
+    bool result3 = strcmp  (data, "DIV");    
+      if (!result3)   {Serial.println("Operación division");
+      if(!a&&!b){
+        Serial.println("Indeterminado");
+      }
+      if(a&&!b){
+        Serial.println("infinito");
+      }
+      if(!a&&b){
+        Serial.println("es cero");
+      }
+      if(a&&b){
+        Serial.println("Division");
+      }
+    }
+
+    bool result4 = strcmp  (data, "AND");    
+      if (!result4)   {Serial.println("Operación AND");
+      if(a&&b){
+        Serial.println("AND");
+      }
+    }
+
+    bool result5 = strcmp  (data, "XOR");    
+      if (!result5)   {Serial.println("Operación XOR");
+      if(a^b){
+        Serial.println("XOR");
+      }
+    }
+
+    bool result6 = strcmp  (data, "OR");    
+      if (!result6)   {Serial.println("Operación OR");
+      if(a||b){
+        Serial.println("OR");
+      }
+    }
+  }
+
+}

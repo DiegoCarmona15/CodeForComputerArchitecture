@@ -1,0 +1,116 @@
+const int A = 2;
+const int B = 3;
+const int W = 4;
+const int X = 5;
+const int Y = 6;
+const int Z = 7;
+const int led1 = 8;
+const int led2 = 9;
+const int led3 = 10;
+int brillo = 200;
+int brillo1 = 270;
+int brillo2 = 100;
+
+void setup() {
+  pinMode(A, INPUT);
+  pinMode(B, INPUT);
+  pinMode(W, INPUT);
+  pinMode(Z, INPUT);
+  pinMode(X, INPUT);
+  pinMode(Y, INPUT);
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  bool PA = digitalRead(A);
+  bool PB = digitalRead(B);
+  bool PW = digitalRead(W);
+  bool PZ = digitalRead(Z);
+  bool PX = digitalRead(X);
+  bool PY = digitalRead(Y);
+
+
+  if(PY && !PX && !PW && !PZ){                             //suma
+    if(PA ^ PB){
+      digitalWrite(led1, brillo1);
+    }else if(PA && PB){
+      digitalWrite(led2, brillo);
+    }
+    digitalWrite(led1, LOW);
+    digitalWrite(led2, LOW);
+  }else if(PX && !PY && !PW && !PZ){                       //Multiplicacion
+    if(PA && PB){
+      digitalWrite(led1, brillo1);
+    }
+    digitalWrite(led1, LOW);
+  }else if(PY && PX && !PW && !PZ){                 //resta
+    if(PA && PB){
+      digitalWrite(led1, LOW);
+      digitalWrite(led2, LOW);
+    }else if(PA){
+      digitalWrite(led1, brillo1);
+    }else if(PB){
+      digitalWrite(led1, brillo1);
+      digitalWrite(led2, brillo);
+    }
+    digitalWrite(led1, LOW);
+    digitalWrite(led2, LOW);
+  }else if(PW && !PX && !PY && !PZ){                        //division
+    if(PA && PB){                                            //salida 1
+      digitalWrite(led1, brillo1);
+      digitalWrite(led3, LOW);
+    } else if(PA){                                           //infinito
+      digitalWrite(led2, brillo);
+      digitalWrite(led1, LOW);
+      digitalWrite(led3, LOW);
+    } else if(PB){                                           //0
+      digitalWrite(led1, LOW);
+      digitalWrite(led2, LOW);
+      digitalWrite(led3, LOW);
+    }                                                                          //indeterminado
+      else if(!PA && !PB){
+        digitalWrite(led3, brillo2);
+    }
+  }else if(PW && PY && !PX && !PZ){                 //AND
+    if(PA && PB){
+      digitalWrite(led1, brillo1);
+    }
+    digitalWrite(led1, LOW);
+  }else if(PW && PX && !PY && !PZ){                 //OR
+    if(PA ^ PB){
+      digitalWrite(led1, brillo1);
+    }
+    else if(PA && PB){
+      digitalWrite(led1, brillo1);
+    }
+    digitalWrite(led1, LOW);
+  }else if(PW && PX && PY && !PZ){           //XOR
+    if(PA ^ PB){
+      digitalWrite(led1, brillo1);
+    }
+    else if(PA && PB){
+      digitalWrite(led1, LOW);
+    }else if(!PA && !PB){
+      digitalWrite(led1, LOW);
+    }
+  }else if(!PW && !PX && !PY && PZ){           //XNOR
+    if((PA && PB)^(!PA && !PB)){
+      digitalWrite(led1, brillo1);
+    }
+    else if((PA && !PB)^(!PA && PB)){
+      digitalWrite(led1, LOW);
+    }
+  }else if(!PW && !PX && PY && PZ){           //XNOR
+    if((PA && !PB)^(!PA && PB)^(!PA && !PB)){
+      digitalWrite(led1, brillo1);
+    }else if((PA && PB)){
+      digitalWrite(led1, LOW);
+    }
+  }
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, LOW);
+}
